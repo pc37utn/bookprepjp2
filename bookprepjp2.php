@@ -21,6 +21,7 @@
  * add comment out ocr and hocr (Bridger)- speed improvement!
  * 20200707
  * add TN and JPG creation from tif during ocr
+ * add back ocr and hocr creation for books
 */
 
 //------functions-------------------
