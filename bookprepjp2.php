@@ -509,9 +509,9 @@ EOL;
       print "Converting jp2 to tif\n";
       exec($convertcommand);
       // create TN and JPG
-      $jpgcvt = "convert  OBJ.tif -resize 600 x 800 -quality 75 JPG.jpg";
+      $jpgcvt = "convert -size 600x800 OBJ.tif -resize 600x800 -quality 75 JPG.jpg";
       exec($jpgcvt);
-      $tncvt = "convert  JPG.jpg -resize 200 x 200 -quality 75 TN.jpg";
+      $tncvt = "convert -size 200x200 JPG.jpg -resize 200x200 -quality 85 TN.jpg";
       exec($tncvt);
     }// end if fromtype=jp2
     // handle ocr
