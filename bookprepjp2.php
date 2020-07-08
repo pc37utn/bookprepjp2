@@ -366,7 +366,7 @@ if(count($errorlist)>=1) {
     print "$err\n";
   }
   print "*---------------------\n";
-  print "* Bookprep is exiting.\n";
+  print "* Bookprepjp2 is exiting.\n";
   print "*---------------------\n";
   exit();
 }
@@ -374,14 +374,12 @@ print "*----------------------------------------------------------------\n";
 print "* There are no errors, bookprep will be able to start the processing.\n";
 print "* Continue?: (Y or any key to exit) \n";
 $input=fgetc(STDIN);
+print "*---------------------------\n";
 if (($input!='y')&&($input!='Y')) {
-  print "*---------------------\n";
-  print "* Bookprep is exiting.\n";
-  print "*---------------------\n";
+  print "* Bookprepjp2 is exiting.\n";
   exit();
 } //else will continue below
-print "*---------------------------\n";
-print "* Bookprep is now continuing\n";
+print "* Bookprepjp2 is now continuing\n";
 print "*---------------------------\n";
 $dir=$rdir;
 // change to dir and read filenames
@@ -510,6 +508,10 @@ EOL;
       print "Converting jp2 to tif\n";
       exec($convertcommand);
       // create TN and JPG
+      $jpgcvt = "convert  OBJ.tif -resize 600 x 800 -quality 75 JPG.jpg";
+      exec($jpgcvt);
+      $tncvt = "convert  JPG.jpg -resize 200 x 200 -quality 75 TN.jpg";
+      exec($tncvt);
     }// end if fromtype=jp2
     // handle ocr
     if(is_file("./OCR.txt")) {
@@ -550,7 +552,7 @@ EOL;
   //chdir('..');
 }//end foreach
 print "*---------------------\n";
-print "* Bookprep has finished.\n";
+print "* Bookprepjp2 has finished.\n";
 print "*---------------------\n";
 unset($dfiles);
 ?>
