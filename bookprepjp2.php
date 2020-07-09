@@ -510,8 +510,10 @@ EOL;
       exec($convertcommand);
       // create TN and JPG
       $jpgcvt = "convert -size 600x800 OBJ.tif -resize 600x800 -quality 75 JPG.jpg";
+      print "Converting temp tif to jpg\n";
       exec($jpgcvt);
       $tncvt = "convert -size 200x200 JPG.jpg -resize 200x200 -quality 85 TN.jpg";
+      print "Converting jpg to tn\n";
       exec($tncvt);
     }// end if fromtype=jp2
     // handle ocr
