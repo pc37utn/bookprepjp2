@@ -15,11 +15,13 @@
  * fix title entities
  * 20180912
  * add creation of lossey display jp2
- * 20200421
+ * 
+ * 20200421 -- new program bookpreptei.php
  * add discover tei and transcript and rename
- * 20200424
+ * 20200424 
  * add comment out ocr and hocr (Bridger)- speed improvement!
- * 20200707
+ * 
+ * 20200707 -- new program   bookprepjp2.php
  * add TN and JPG creation from tif during ocr
  * add back ocr and hocr creation for books
 */
@@ -317,6 +319,15 @@ function getmeta($xmlfile) {
   return $meta;
 }
 /*
+ * pLine   prints a line of dashes to terminal
+*/
+function pLine($message="test") {
+  print "*--------------------------------------------\n";
+  print "*  $message \n";
+  print "*--------------------------------------------\n";
+  return;
+}
+/*
 * gettitle  retruns the title of a book,
 depending on the metadata
 */
@@ -360,28 +371,21 @@ if((chkConvert())&&(chkXmllint())&&(chkKDU())&&(chkTess())&&(chkMaindir($rdir)))
   chkMeta($rdir);
 }
 if(count($errorlist)>=1) {
-  print "*------------------------------------------------------\n";
-  print "* The following errors exist, please fix and rerun. \n";
-  print "*------------------------------------------------------\n";
+  pLine("These errors exist, please fix and rerun. ");
   foreach($errorlist as $err) {
     print "$err\n";
   }
-  print "*---------------------\n";
-  print "* Bookprepjp2 is exiting.\n";
-  print "*---------------------\n";
+  pLine(" Bookprepjp2 is exiting.");
   exit();
 }
-print "*----------------------------------------------------------------\n";
-print "* There are no errors, bookprep will be able to start the processing.\n";
+pLine(" There are no errors, bookprep will be able to start the processing.");
 print "* Continue?: (Y or any key to exit) \n";
 $input=fgetc(STDIN);
-print "*---------------------------\n";
 if (($input!='y')&&($input!='Y')) {
-  print "* Bookprepjp2 is exiting.\n";
+  pLine(" Bookprepjp2 is exiting.");
   exit();
 } //else will continue below
-print "* Bookprepjp2 is now continuing\n";
-print "*---------------------------\n";
+pLine(" Bookprepjp2 is now continuing");
 $dir=$rdir;
 // change to dir and read filenames
 chdir($dir);
@@ -494,7 +498,7 @@ EOL;
     }
     // change into new page dir, remembering previous
     $cwd = getcwd();
-    print "Changing to directory: $newdir\n";
+    pLine("Changing to directory: $newdir");
     chdir($newdir);
     // do conversion if needed
     if (($fromtype=='tif')&&($totype=='jp2')) {
@@ -527,11 +531,11 @@ EOL;
       print "Converting tif to display jp2\n";
       exec($convertcommand);
       // create OCR
-      print "Creating OCR.. \n";
+      print "Creating OCR...... \n";
       $tesscommand="tesseract OBJ.tif OCR -l eng";
       exec($tesscommand);
       //create HOCR
-      print "Creating HOCR.. \n";
+      print "Creating HOCR...... \n";
       $tesscommand="tesseract OBJ.tif HOCR -l eng hocr";
       exec($tesscommand);
       // remove doctype if it is there using xmllint
@@ -553,8 +557,6 @@ EOL;
   }//end else is tif
   //chdir('..');
 }//end foreach
-print "*---------------------\n";
-print "* Bookprepjp2 has finished.\n";
-print "*---------------------\n";
+pLine(" Bookprepjp2 has finished.");
 unset($dfiles);
 ?>
