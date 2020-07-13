@@ -328,6 +328,19 @@ function pLine($message="test") {
   return;
 }
 /*
+ * mkDeriv   prints a line of dashes to terminal
+*/
+function mkImgDeriv() {
+  // create TN and JPG
+  $jpgcvt = "convert -size 600x800 OBJ.tif -resize 600x800 -quality 75 JPG.jpg";
+  print "Converting temp tif to jpg\n";
+  exec($jpgcvt);
+  $tncvt = "convert -size 200x200 JPG.jpg -resize 200x200 -quality 85 TN.jpg";
+  print "Converting jpg to tn\n";
+  exec($tncvt);
+  return;
+}
+/*
 * gettitle  retruns the title of a book,
 depending on the metadata
 */
@@ -512,13 +525,7 @@ EOL;
       $convertcommand="kdu_expand -i OBJ.jp2 -o OBJ.tif ";
       print "Converting jp2 to tif\n";
       exec($convertcommand);
-      // create TN and JPG
-      $jpgcvt = "convert -size 600x800 OBJ.tif -resize 600x800 -quality 75 JPG.jpg";
-      print "Converting temp tif to jpg\n";
-      exec($jpgcvt);
-      $tncvt = "convert -size 200x200 JPG.jpg -resize 200x200 -quality 85 TN.jpg";
-      print "Converting jpg to tn\n";
-      exec($tncvt);
+      //mkImgDeriv();
     }// end if fromtype=jp2
     // handle ocr
     if(is_file("./OCR.txt")) {
@@ -544,6 +551,7 @@ EOL;
       // delete redundant text file if it exists
       if (is_file('HOCR.txt')) exec("rm -f HOCR.txt");
     }
+    mkImgDeriv();
     // if dest is tif
     if ($totype=='tif') {
       // delete the OBJ.jp2
