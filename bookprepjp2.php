@@ -319,7 +319,7 @@ function getmeta($xmlfile) {
   return $meta;
 }
 /*
- * pLine   prints a line of dashes to terminal
+ * pLine   prints a message between lines of dashes
 */
 function pLine($message="test") {
   print "*--------------------------------------------\n";
@@ -328,7 +328,7 @@ function pLine($message="test") {
   return;
 }
 /*
- * mkDeriv   prints a line of dashes to terminal
+ * mkDeriv  takes the current OBJ.tif and makes TN and JPG derivatives
 */
 function mkImgDeriv() {
   // create TN and JPG
@@ -525,7 +525,6 @@ EOL;
       $convertcommand="kdu_expand -i OBJ.jp2 -o OBJ.tif ";
       print "Converting jp2 to tif\n";
       exec($convertcommand);
-      //mkImgDeriv();
     }// end if fromtype=jp2
     // handle ocr
     if(is_file("./OCR.txt")) {
