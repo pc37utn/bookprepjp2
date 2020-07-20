@@ -502,12 +502,6 @@ EOL;
     else {
       print "$new is already in destination, ok.\n";
     }
-    // also send existing txt file there
-    $tfile='./'.$dirname.'/'.$base.'.txt';
-    $tnew='./'.$seqdir."/".'OCR.txt';
-    if (is_file($tfile)) {
-       rename($tfile,$tnew);
-    }
     // change into new page dir, remembering previous
     $cwd = getcwd();
     pLine("Changing to directory: $newdir");
@@ -525,30 +519,24 @@ EOL;
       print "Converting jp2 to tif\n";
       exec($convertcommand);
     }// end if fromtype=jp2
-    // handle ocr
-    if(is_file("./OCR.txt")) {
-      print "OCR already exists\n";
-    }
-    else {
-      // create display JP2
-      $args= '-rate 0.5 Clayers=1 Clevels=7 "Cprecincts={256,256},{256,256},{256,256},{128,128},{128,128},{64,64},{64,64},{32,32},{16,16}" "Corder=RPCL" "ORGgen_plt=yes" "ORGtparts=R" "Cblk={32,32}" Cuse_sop=yes';
-      $convertcommand="kdu_compress -i OBJ.tif -o JP2.jp2 $args ";
-      print "Converting tif to display jp2\n";
-      exec($convertcommand);
-      // create OCR
-      print "Creating OCR...... \n";
-      $tesscommand="tesseract OBJ.tif OCR -l eng";
-      exec($tesscommand);
-      //create HOCR
-      print "Creating HOCR...... \n";
-      $tesscommand="tesseract OBJ.tif HOCR -l eng hocr";
-      exec($tesscommand);
-      // remove doctype if it is there using xmllint
-      shell_exec("xmllint --dropdtd --xmlout HOCR.hocr --output HOCR.html");
-      exec("rm -f HOCR.hocr");
-      // delete redundant text file if it exists
-      if (is_file('HOCR.txt')) exec("rm -f HOCR.txt");
-    }
+    // create display JP2
+    $args= '-rate 0.5 Clayers=1 Clevels=7 "Cprecincts={256,256},{256,256},{256,256},{128,128},{128,128},{64,64},{64,64},{32,32},{16,16}" "Corder=RPCL" "ORGgen_plt=yes" "ORGtparts=R" "Cblk={32,32}" Cuse_sop=yes';
+    $convertcommand="kdu_compress -i OBJ.tif -o JP2.jp2 $args ";
+    print "Converting tif to display jp2\n";
+    exec($convertcommand);
+    // create OCR
+    print "Creating OCR...... \n";
+    $tesscommand="tesseract OBJ.tif OCR -l eng";
+    exec($tesscommand);
+    //create HOCR
+    print "Creating HOCR...... \n";
+    $tesscommand="tesseract OBJ.tif HOCR -l eng hocr";
+    exec($tesscommand);
+    // remove doctype if it is there using xmllint
+    shell_exec("xmllint --dropdtd --xmlout HOCR.hocr --output HOCR.html");
+    exec("rm -f HOCR.hocr");
+    // delete redundant text file if it exists
+    if (is_file('HOCR.txt')) exec("rm -f HOCR.txt");
     mkImgDeriv();
     // if dest is tif
     if ($totype=='tif') {
