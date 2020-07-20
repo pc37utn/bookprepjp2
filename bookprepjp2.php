@@ -399,9 +399,8 @@ if (($input!='y')&&($input!='Y')) {
   exit();
 } //else will continue below
 pLine(" Bookprepjp2 is now continuing");
-$dir=$rdir;
 // change to dir and read filenames
-chdir($dir);
+chdir($rdir);
 $dfiles = listFiles(".");
 // first loop to read all existing files
 foreach ($dfiles as $dfil) {
