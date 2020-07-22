@@ -360,6 +360,35 @@ function paramErr() {
   print "Error **  missing parameters*** \n";
   return; 
 }
+/*
+ * mkJP2  non-lossey jp2 for OBJ with kdu_compress
+*/ 
+function mkJP2() {
+  $args = 'Creversible=yes -rate -,1,0.5,0.25 Clevels=5';
+  $convertcommand="kdu_compress -i OBJ.tif -o OBJ.jp2 $args ";
+  print "Converting tif to jp2\n";
+  exec($convertcommand);
+  return; 
+}
+/*
+ * mkTIF  convert jp2 to tif with kdu_expand
+*/ 
+function mkTIF() {
+  $convertcommand="kdu_expand -i OBJ.jp2 -o OBJ.tif ";
+  print "Converting jp2 to tif\n";
+  exec($convertcommand);
+  return; 
+}
+/*
+ * mkLosseyJP2  convert tif to lossey jp2
+*/ 
+function mkLosseyJP2() {
+  $args= '-rate 0.5 Clayers=1 Clevels=7 "Cprecincts={256,256},{256,256},{256,256},{128,128},{128,128},{64,64},{64,64},{32,32},{16,16}" "Corder=RPCL" "ORGgen_plt=yes" "ORGtparts=R" "Cblk={32,32}" Cuse_sop=yes';
+  $convertcommand="kdu_compress -i OBJ.tif -o JP2.jp2 $args ";
+  print "Converting tif to display jp2\n";
+  exec($convertcommand);
+  return; 
+}
 //------------- begin main-----------------
 
 $xpdf=$xtei=$rdir=$numsep=$xnew=$new=$tif=$rep='';
@@ -511,22 +540,14 @@ EOL;
     chdir($newdir);
     // do conversion if needed
     if (($fromtype=='tif')&&($totype=='jp2')) {
-      $args = 'Creversible=yes -rate -,1,0.5,0.25 Clevels=5';
-      $convertcommand="kdu_compress -i OBJ.tif -o OBJ.jp2 $args ";
-      print "Converting tif to jp2\n";
-      exec($convertcommand);
+      mkJP2;
     }// end if tif2jp2
     if ($fromtype=='jp2') {
       // create tif from jp2
-      $convertcommand="kdu_expand -i OBJ.jp2 -o OBJ.tif ";
-      print "Converting jp2 to tif\n";
-      exec($convertcommand);
+      mkTIF;
     }// end if fromtype=jp2
     // create display JP2
-    $args= '-rate 0.5 Clayers=1 Clevels=7 "Cprecincts={256,256},{256,256},{256,256},{128,128},{128,128},{64,64},{64,64},{32,32},{16,16}" "Corder=RPCL" "ORGgen_plt=yes" "ORGtparts=R" "Cblk={32,32}" Cuse_sop=yes';
-    $convertcommand="kdu_compress -i OBJ.tif -o JP2.jp2 $args ";
-    print "Converting tif to display jp2\n";
-    exec($convertcommand);
+    mkLosseyJP2;
     // create OCR
     print "Creating OCR...... \n";
     $tesscommand="tesseract OBJ.tif OCR -l eng";
