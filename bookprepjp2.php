@@ -351,6 +351,15 @@ function gettitle($xmlfile,$meta) {
   else $booktitle = $sxe->titleInfo->title;
   return $booktitle;
 }
+/*
+ * paramErr  shows parameter reminder
+*/ 
+function paramErr() {
+  print "\n";
+  print "usage: bookprep.php directoryname destination-image-type:(tif|jp2)\n";
+  print "Error **  missing parameters*** \n";
+  return; 
+}
 //------------- begin main-----------------
 
 $xpdf=$xtei=$rdir=$numsep=$xnew=$new=$tif=$rep='';
@@ -358,24 +367,18 @@ $errorlist = array();
 //get parameters from command line
 if (isset($argv[1])) $rdir=$argv[1];
 else {
-  print "\n";
-  print "usage: bookprep.php directoryname destination-image-type:(tif|jp2)\n";
-  print "Error **  missing parameters*** \n";
+  paramErr;
   exit();
 }
 if (isset($argv[2])) {
   if (($argv[2]=='tif')||($argv[2]=='jp2')) $totype=$argv[2];
   else {
-    print "\n";
-    print "destination-image-type must be either \"tif\" or \"jp2\"\n";
-    print "Error **  missing parameters*** \n";
+    paramErr;
     exit();
   }
 } //end if
 else {
-  print "\n";
-  print "usage: bookprep.php directoryname destination-image-type:(tif|jp2)\n";
-  print "Error **  missing parameters*** \n";
+  paramErr;
   exit();
 }
 // ---------------
