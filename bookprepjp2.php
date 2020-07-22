@@ -396,18 +396,18 @@ $errorlist = array();
 //get parameters from command line
 if (isset($argv[1])) $rdir=$argv[1];
 else {
-  paramErr;
+  paramErr();
   exit();
 }
 if (isset($argv[2])) {
   if (($argv[2]=='tif')||($argv[2]=='jp2')) $totype=$argv[2];
   else {
-    paramErr;
+    paramErr();
     exit();
   }
 } //end if
 else {
-  paramErr;
+  paramErr();
   exit();
 }
 // ---------------
@@ -540,14 +540,14 @@ EOL;
     chdir($newdir);
     // do conversion if needed
     if (($fromtype=='tif')&&($totype=='jp2')) {
-      mkJP2;
+      mkJP2();
     }// end if tif2jp2
     if ($fromtype=='jp2') {
       // create tif from jp2
-      mkTIF;
+      mkTIF();
     }// end if fromtype=jp2
     // create display JP2
-    mkLosseyJP2;
+    mkLosseyJP2();
     // create OCR
     print "Creating OCR...... \n";
     $tesscommand="tesseract OBJ.tif OCR -l eng";
