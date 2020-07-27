@@ -227,21 +227,12 @@ function getNumSep($base) {
   return $numsep;
 }
 /*
-* testseq
-* by converting seq to integer
-*/
-function testseq($seq) {
-  if (($seq<1)||($seq>2000)) return FALSE;
-  return TRUE;
-}
-/*
 * getseqdir  returns an integer for an
 * page sequence number on the end of a basename
 */
 function getseqdir($base) {
     // count underscores in filename
     $numsep=getNumSep($base);
-    //$numsep=substr_count($base, "_");
     // break filename on underscores
     $allstr=explode("_",$base);
     if ($numsep==1) {
@@ -261,7 +252,6 @@ function getseqdir($base) {
     }
     // convert seq to integer
     $seq=$seq*1;
-    //if (($seq>=1)&&($seq<=2000)) print "seq = $seq\n";
     // check for dir already there
     $seqdir=$dirname.'/'.$seq;
   return $seqdir;
