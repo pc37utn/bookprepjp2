@@ -24,6 +24,7 @@
  * 20200707 -- new program   bookprepjp2.php
  * add TN and JPG creation from tif during ocr
  * add back ocr and hocr creation for books
+ * remove misc text file addition
 */
 
 //------functions-------------------
@@ -443,12 +444,6 @@ foreach ($dfiles as $dfil) {
     $xbase=basename($dfil,'.xml');
     // check for kind of metadata, DC or MODS
     $meta=getmeta($dfil);
-    // check for matching item directory
-    if (!isDir($xbase)) {
-      print "Error ***  item/metadata mismatch ***\n";
-      print " there is no directory to match $dfil\n";
-      exit();
-    }
     //make new location
     $xnew='./'.$xbase.'/'.$meta.'.xml';
     if(!file_exists($xnew)) copy($dfil,$xnew);
