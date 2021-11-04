@@ -424,6 +424,9 @@ if (($input!='y')&&($input!='Y')) {
 pLine(" Bookprepjp2 is now continuing");
 // change to dir and read filenames
 chdir($rdir);
+// rename new i and p files if there
+exec("rename '_i.jp2' '.jp2' */*_i.jp2");
+exec("rename '_p.jp2' '.pre' */*_p.jp2");
 $dfiles = listFiles(".");
 // first loop to read all existing files
 foreach ($dfiles as $dfil) {
