@@ -25,6 +25,9 @@
  * add TN and JPG creation from tif during ocr
  * add back ocr and hocr creation for books
  * remove misc text file addition
+ *
+ * add handling of intermediate and preservation files
+ *
 */
 
 //------functions-------------------
