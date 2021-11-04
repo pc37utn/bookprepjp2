@@ -25,9 +25,6 @@
  * add TN and JPG creation from tif during ocr
  * add back ocr and hocr creation for books
  * remove misc text file addition
- *
- * add handling of intermediate and preservation files
- *
 */
 
 //------functions-------------------
@@ -141,7 +138,7 @@ function chkMeta($rdir) {
         $err="error: xml does not have matching directory:$dfil\n";
         array_push($errorlist, "$err");
       }
-    }//end if xmlhttp://dlwork.lib.utk.edu/dev/
+    }//end if xml
     if (($end=='.xml')&&($xmlcount==0)) {
       $err="error: missing xml \n";
       array_push($errorlist, "$err");
@@ -255,6 +252,7 @@ function getseqdir($base) {
       $dirname=$allstr[0]."_".$allstr[1]."_".$allstr[2];
     }
     // convert seq to integer
+    print "$seq \n";
     $seq=$seq*1;
     // check for dir already there
     $seqdir=$dirname.'/'.$seq;
@@ -384,8 +382,8 @@ function mkLosseyJP2() {
   return; 
 }
 //------------- begin main-----------------
-
-$xpdf=$xtei=$rdir=$numsep=$xnew=$new=$tif=$rep='';
+$newworkflow=0;
+$xpdf=$xtei=$rdir=$numsep=$xnew=$new=$tif=$rep=$dfilp=$newp='';
 $errorlist = array();
 //get parameters from command line
 if (isset($argv[1])) $rdir=$argv[1];
@@ -404,6 +402,7 @@ else {
   paramErr();
   exit();
 }
+
 // ---------------
 if((chkConvert())&&(chkXmllint())&&(chkKDU())&&(chkTess())&&(chkMaindir($rdir))) {
   // running basic system checks
@@ -427,7 +426,6 @@ if (($input!='y')&&($input!='Y')) {
 pLine(" Bookprepjp2 is now continuing");
 // change to dir and read filenames
 chdir($rdir);
-// rename new i and p files if there
 exec("rename '_i.jp2' '.jp2' */*_i.jp2");
 exec("rename '_p.jp2' '.pre' */*_p.jp2");
 $dfiles = listFiles(".");
@@ -487,6 +485,12 @@ foreach ($dfiles as $dfil) {
   }
   else $fromtype='';
   if (($end=='.jp2') || ($end=='.tif')) {
+    if ($end=='.jp2') {
+      // modify copy of dfil for pre extension
+      $dfilp=$dfil;
+      $dfilp = str_replace('.jp2','.pre',$dfilp);
+      print "**** dfilp = $dfilp \n";
+    }
     // get basename
     $base=basename($dfil,$end);
     $seqdir=getseqdir($base);
@@ -497,6 +501,8 @@ foreach ($dfiles as $dfil) {
     $seq=$s[1];
     $newdir='./'.$seqdir;
     $new='./'.$seqdir."/".'OBJ'.$end;
+    // setup new preserve name
+    $newp='./'.$seqdir."/".'PRESERVE'.'.jp2';
     // what is xbase xml of this image
     $thisxml=getdirname($base).".xml";
     // get booktitle specific to this image
@@ -518,12 +524,21 @@ EOL;
     $mfile=$seqdir."/"."MODS.xml";
     print "Writing MODS.xml\n";
     file_put_contents($mfile, $pagexml);
+    // rename page image to OBJ
     if(!file_exists($new)) {
       rename($dfil,$new);
       print "renaming:  $dfil \n   to : $new\n";
     }
     else {
       print "$new is already in destination, ok.\n";
+    }
+    // rename pre image to PRESERVE
+    if(!file_exists($newp)) {
+      rename($dfilp,$newp);
+      print "renaming:  $dfilp   to : $newp \n";
+    }
+    else {
+      print "$newp is already in destination, ok.\n";
     }
     // change into new page dir, remembering previous
     $cwd = getcwd();
@@ -560,6 +575,8 @@ EOL;
     }// end if totype is tif
     // if the OCR and HOCR are there, delete the tif, unless it is the totype
     if ((is_file("OCR.txt"))&&($totype!='tif'))  exec("rm -f OBJ.tif");
+    // if new workflow, rename to PRESERVE.jp2
+
     // change back
     chdir($cwd);
     //
